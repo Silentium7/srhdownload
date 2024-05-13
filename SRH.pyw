@@ -22,33 +22,36 @@ import urllib.request
 import pygame
 pygame.init()
 
-# actualise la liste des jeux disponibles en ligne
-data_file = urllib.request.urlopen("https://raw.githubusercontent.com/Silentium7/SRH/main/data/data.txt")
-data = data_file.readlines()
-for i in range(len(data)): data[i] = data[i].decode("utf8")[0:-2]
-data_file.close()
-if not "jeux" in listdir() : mkdir("jeux")
-for i in range(len(data)):
-    url_image = "https://raw.githubusercontent.com/Silentium7/SRH/main/"+data[i]+"/icon.jpg"
-    fichiers = listdir()
-    try : 
-        if not "jeux/"+data[i] in fichiers : mkdir("jeux/"+data[i])
-    except FileExistsError  :pass
-    fichiers = listdir("jeux/"+data[i])
-    if not "icon.jpg" in fichiers :
-        urllib.request.urlretrieve("https://raw.githubusercontent.com/Silentium7/SRH/main/"+data[i]+"/icon.jpg", "jeux/"+data[i]+"/icon.jpg")
-    chaine = data[i]+".pyw"
-    if not chaine in fichiers :
-        urllib.request.urlretrieve("https://raw.githubusercontent.com/Silentium7/SRH/main/"+data[i]+"/"+chaine, "jeux/"+data[i]+"/"+chaine)
-    
 
+try :
+    # actualise la liste des jeux disponibles en ligne
+    data_file = urllib.request.urlopen("https://raw.githubusercontent.com/Silentium7/SRH/main/data/data.txt")
+    data = data_file.readlines()
+    for i in range(len(data)): data[i] = data[i].decode("utf8")[0:-2]
+    data_file.close()
+    if not "jeux" in listdir() : mkdir("jeux")
+    for i in range(len(data)):
+        url_image = "https://raw.githubusercontent.com/Silentium7/SRH/main/"+data[i]+"/icon.jpg"
+        fichiers = listdir()
+        try : 
+            if not "jeux/"+data[i] in fichiers : mkdir("jeux/"+data[i])
+        except FileExistsError  :pass
+        fichiers = listdir("jeux/"+data[i])
+        if not "icon.jpg" in fichiers :
+            urllib.request.urlretrieve("https://raw.githubusercontent.com/Silentium7/SRH/main/"+data[i]+"/icon.jpg", "jeux/"+data[i]+"/icon.jpg")
+        chaine = data[i]+".pyw"
+        if not chaine in fichiers :
+            urllib.request.urlretrieve("https://raw.githubusercontent.com/Silentium7/SRH/main/"+data[i]+"/"+chaine, "jeux/"+data[i]+"/"+chaine)
 
-
+except urllib.error.URLError : pass
 
 screen = pygame.display.set_mode([600, 600])
 pygame.display.set_caption("RAPHUB")
 
-Liste_jeux = data
+
+
+Liste_jeux = listdir("jeux/")
+
 
 running = True
 while running:
@@ -67,7 +70,7 @@ while running:
         screen.blit(picture, rect)
         pos = pygame.mouse.get_pos()
         if rect[0] <= pos[0] <= rect[0]+rect[2] and rect[1] <= pos[1] <= rect[1]+rect[3] and pygame.mouse.get_pressed()[0]:
-            subprocess.call(["python", "jeux/Snake/Snake.pyw"])
+            subprocess.call(["python", "jeux/"+Liste_jeux[i]+"/"+Liste_jeux[i]+".pyw"])
             time.sleep(1)
 
 
